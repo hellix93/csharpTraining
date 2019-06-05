@@ -1,2 +1,2 @@
-# csharptrening
+# csharpTraining
 курсы автоматизации csharp
