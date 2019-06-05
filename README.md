@@ -1,0 +1,2 @@
+# csharptrening
+курсы автоматизации csharp
