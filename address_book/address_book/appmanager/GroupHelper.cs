@@ -29,6 +29,8 @@ namespace WebAddressbookTests
         public GroupHelper Modify(int v, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
+            CreateGroupIfNotExist(v);
+
             SelectGroup(v);
             InitGroupModification();
             FillGroupForm(newData);
@@ -40,6 +42,8 @@ namespace WebAddressbookTests
         public GroupHelper Remove(int v)
         {
             manager.Navigator.GoToGroupsPage();
+            CreateGroupIfNotExist(v);
+
             SelectGroup(v);
             RemoveGroup();
             ReturnToGroupsPage();
@@ -93,6 +97,21 @@ namespace WebAddressbookTests
         public GroupHelper SubmitGroupModification()
         {
             driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
+        public GroupHelper CreateGroupIfNotExist(int v) //проверка есть ли группа(-ы), если нет то создается
+        {
+            //выбрал while тк если индекс будет пятой группы а их всего 2 то нужно создать будет еще 3 группы
+            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + v + "]")))
+            {
+                //создаем группу
+                GroupData group = new GroupData("nowExist");
+                group.Header = "bbb";
+                group.Footer = "ccc";
+
+                Create(group);
+            }
             return this;
         }
     }

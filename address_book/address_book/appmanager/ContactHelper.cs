@@ -26,10 +26,11 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper Modify(int v, ContactData newData)
+        public ContactHelper Modify(int i, ContactData newData)
         {
             manager.Navigator.GoToMainPage();
-            InitContactModification(v);
+            CreateContactIfNotExist(i); //создать контакт если не существует
+            InitContactModification(i);
             FillContactForm(newData);
             SubmitContactModofication();
 
@@ -40,6 +41,7 @@ namespace WebAddressbookTests
         public ContactHelper Remove(int i)
         {
             manager.Navigator.GoToMainPage();
+            CreateContactIfNotExist(i); //создать контакт если не существует
             SelectContact(i);
             RemoveContact();
             return this;
@@ -110,6 +112,42 @@ namespace WebAddressbookTests
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             driver.SwitchTo().Alert().Accept();
             manager.Navigator.GoToMainPage();
+            return this;
+        }
+
+        public ContactHelper CreateContactIfNotExist(int v) //проверка есть ли контакт(-ы), если нет то создается
+        {
+            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + v + "]")))
+            {
+                //создаем контакт
+                ContactData contact = new ContactData("freshname", "lastnewname");
+                //заполняем значениями
+                contact.Middlename = "newmiddle";
+                contact.Lastname = "newlastname";
+                contact.Nickname = "newnick";
+                contact.Title = "title";
+                contact.Company = "Microsoft";
+                contact.Address = "IfNotExist";
+                contact.Home = "000";
+                contact.Mobile = "911";
+                contact.Work = "777";
+                contact.Fax = "112";
+                contact.Email = "1@2.ru";
+                contact.Email2 = "3@4.ru";
+                contact.Email3 = "5@6.com";
+                contact.Homepage = "ya.ru";
+                contact.Bday = "18";
+                contact.Bmonth = "May";
+                contact.Byear = "1992";
+                contact.Aday = "19";
+                contact.Amonth = "December";
+                contact.Ayear = "2001";
+                contact.Address2 = "add2";
+                contact.Phone2 = "666";
+                contact.Notes = "gotovo";
+
+                Create(contact);
+            }
             return this;
         }
     }

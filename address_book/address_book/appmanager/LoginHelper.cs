@@ -47,7 +47,7 @@ namespace WebAddressbookTests
         public bool IsLoggedIn(AccountData account)
         {
             //без Thread.Sleep тесты на логин иногда падают (например при запуске всех тестов сразу), 
-            //видимо не успевает подгрузиться в кеш вся страницу из-за чего тест не находит нужные элементы по второй половине условия
+            //видимо не успевает подгрузиться в кеш вся веб-страница из-за чего тест не находит нужные элементы по второй половине условия
             Thread.Sleep(200);
             return IsLoggedIn()
                 && (driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text 

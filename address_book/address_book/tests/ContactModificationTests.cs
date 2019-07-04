@@ -38,7 +38,7 @@ namespace WebAddressbookTests
             newData.Phone2 = "999";
             newData.Notes = "Contact was modificated";
 
-            app.Contacts.Modify(1, newData);
+            app.Contacts.Modify(2, newData);
         }
     }
 }
