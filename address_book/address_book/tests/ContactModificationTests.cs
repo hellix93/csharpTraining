@@ -38,7 +38,11 @@ namespace WebAddressbookTests
             newData.Phone2 = "999";
             newData.Notes = "Contact was modificated";
 
-            app.Contacts.Modify(2, newData);
+            int i = 0; //номер элемента который будем изменять
+
+            app.Contacts.CreateContactIfNotExist(i); //создать контакт если не существует
+
+            app.Contacts.Modify(i, newData);
         }
     }
 }

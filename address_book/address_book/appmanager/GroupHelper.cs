@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -26,10 +27,21 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public List<GroupData> GetGroupList()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            manager.Navigator.GoToGroupsPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            foreach (IWebElement element in elements)
+            {
+                groups.Add(new GroupData(element.Text));
+            }
+            return groups;
+        }
+
         public GroupHelper Modify(int v, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
-            CreateGroupIfNotExist(v);
 
             SelectGroup(v);
             InitGroupModification();
@@ -42,7 +54,6 @@ namespace WebAddressbookTests
         public GroupHelper Remove(int v)
         {
             manager.Navigator.GoToGroupsPage();
-            CreateGroupIfNotExist(v);
 
             SelectGroup(v);
             RemoveGroup();
@@ -58,7 +69,7 @@ namespace WebAddressbookTests
 
         public GroupHelper SelectGroup(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -102,8 +113,9 @@ namespace WebAddressbookTests
 
         public GroupHelper CreateGroupIfNotExist(int v) //проверка есть ли группа(-ы), если нет то создается
         {
+            manager.Navigator.GoToGroupsPage();
             //выбрал while тк если индекс будет пятой группы а их всего 2 то нужно создать будет еще 3 группы
-            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + v + "]")))
+            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + (v + 1) + "]")))
             {
                 //создаем группу
                 GroupData group = new GroupData("nowExist");

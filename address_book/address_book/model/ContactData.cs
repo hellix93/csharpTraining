@@ -39,6 +39,11 @@ namespace WebAddressbookTests
             this.lastname = lastname;
         }
 
+        public ContactData(string firstname)
+        {
+            this.firstname = firstname;
+        }
+
         public string Firstname
         {
             get

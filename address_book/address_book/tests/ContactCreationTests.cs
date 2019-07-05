@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework;
@@ -38,7 +39,12 @@ namespace WebAddressbookTests
             contact.Phone2 = "666";
             contact.Notes = "gotovo";
 
+            List<ContactData> oldContacts = app.Contacts.GetContactList();
+
             app.Contacts.Create(contact);
+
+            List<ContactData> newContacts = app.Contacts.GetContactList();
+            Assert.AreEqual(oldContacts.Count + 1, newContacts.Count);
         }
     }
 }

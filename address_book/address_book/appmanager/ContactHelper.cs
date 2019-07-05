@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,7 +30,6 @@ namespace WebAddressbookTests
         public ContactHelper Modify(int i, ContactData newData)
         {
             manager.Navigator.GoToMainPage();
-            CreateContactIfNotExist(i); //создать контакт если не существует
             InitContactModification(i);
             FillContactForm(newData);
             SubmitContactModofication();
@@ -41,10 +41,22 @@ namespace WebAddressbookTests
         public ContactHelper Remove(int i)
         {
             manager.Navigator.GoToMainPage();
-            CreateContactIfNotExist(i); //создать контакт если не существует
             SelectContact(i);
             RemoveContact();
             return this;
+        }
+
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+            manager.Navigator.GoToMainPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
+            foreach (IWebElement element in elements)
+            {
+                contacts.Add(new ContactData(element.Text));
+            }
+
+            return contacts;
         }
 
         public ContactHelper FillContactForm(ContactData contact)
@@ -91,7 +103,7 @@ namespace WebAddressbookTests
 
         public ContactHelper InitContactModification(int index)
         {
-            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//img[@alt='Edit'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -103,7 +115,7 @@ namespace WebAddressbookTests
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -117,7 +129,8 @@ namespace WebAddressbookTests
 
         public ContactHelper CreateContactIfNotExist(int v) //проверка есть ли контакт(-ы), если нет то создается
         {
-            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + v + "]")))
+            manager.Navigator.GoToMainPage();
+            while (!IsElementPresent(By.XPath("(//input[@name='selected[]'])[" + (v + 1) + "]")))
             {
                 //создаем контакт
                 ContactData contact = new ContactData("freshname", "lastnewname");
