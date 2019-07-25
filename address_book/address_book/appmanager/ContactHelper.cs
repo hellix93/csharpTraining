@@ -27,6 +27,24 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+            manager.Navigator.GoToMainPage();
+
+            IList<IWebElement> firstElements = driver.FindElements(By.CssSelector("#maintable td:nth-child(3)"));
+            IList<IWebElement> lastElements = driver.FindElements(By.CssSelector("#maintable td:nth-child(2)"));
+            int i = 0;
+
+            foreach (IWebElement firstElement in firstElements)
+            {
+                
+                contacts.Add(new ContactData(firstElement.Text, lastElements[i].Text));
+                i++;
+            }
+            return contacts;
+        }
+
         public ContactHelper Modify(int i, ContactData newData)
         {
             manager.Navigator.GoToMainPage();
@@ -43,20 +61,9 @@ namespace WebAddressbookTests
             manager.Navigator.GoToMainPage();
             SelectContact(i);
             RemoveContact();
-            return this;
-        }
-
-        public List<ContactData> GetContactList()
-        {
-            List<ContactData> contacts = new List<ContactData>();
+            Thread.Sleep(200); //имитирую задержку. без нее тест падает (считывает элементы быстрее чем совершается обновление страницы)
             manager.Navigator.GoToMainPage();
-            ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
-            foreach (IWebElement element in elements)
-            {
-                contacts.Add(new ContactData(element.Text));
-            }
-
-            return contacts;
+            return this;
         }
 
         public ContactHelper FillContactForm(ContactData contact)
@@ -123,7 +130,6 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             driver.SwitchTo().Alert().Accept();
-            manager.Navigator.GoToMainPage();
             return this;
         }
 

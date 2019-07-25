@@ -20,7 +20,15 @@ namespace WebAddressbookTests
 
             app.Groups.CreateGroupIfNotExist(i); // вызов метода проверки существует ли группа, если группы нет создастся новая
 
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
             app.Groups.Modify(i, newData);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            oldGroups[i].Name = newData.Name;
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
         }
     }
 }

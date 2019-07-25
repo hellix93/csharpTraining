@@ -15,8 +15,9 @@ namespace WebAddressbookTests
         {
             ContactData contact = new ContactData("firstname", "lastname");
             //заполняем значениями
+            //contact.Firstname = "firstname";
             contact.Middlename = "middle";
-            contact.Lastname = "lastname";
+            //contact.Lastname = "lastname";
             contact.Nickname = "nick";
             contact.Title = "title";
             contact.Company = "Microsoft";
@@ -44,7 +45,12 @@ namespace WebAddressbookTests
             app.Contacts.Create(contact);
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
-            Assert.AreEqual(oldContacts.Count + 1, newContacts.Count);
+
+            oldContacts.Add(contact);
+            oldContacts.Sort();
+            newContacts.Sort();
+            
+            Assert.AreEqual(oldContacts, newContacts);
         }
     }
 }
