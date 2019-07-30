@@ -61,7 +61,6 @@ namespace WebAddressbookTests
             manager.Navigator.GoToMainPage();
             SelectContact(i);
             RemoveContact();
-            Thread.Sleep(200); //имитирую задержку. без нее тест падает (считывает элементы быстрее чем совершается обновление страницы)
             manager.Navigator.GoToMainPage();
             return this;
         }
@@ -130,6 +129,18 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             driver.SwitchTo().Alert().Accept();
+            while (true) //ожидание сообщения об успешном удалении контакта
+            {
+                try
+                {
+                    driver.FindElement(By.CssSelector("div.msgbox"));
+                    break;
+                }
+                catch (Exception)
+                {
+
+                }
+            }
             return this;
         }
 
