@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -27,22 +28,29 @@ namespace WebAddressbookTests
             return this;
         }
 
+        private List<ContactData> contactCache = null;
+
         public List<ContactData> GetContactList()
         {
-            List<ContactData> contacts = new List<ContactData>();
-            manager.Navigator.GoToMainPage();
-
-            IList<IWebElement> firstElements = driver.FindElements(By.CssSelector("#maintable td:nth-child(3)"));
-            IList<IWebElement> lastElements = driver.FindElements(By.CssSelector("#maintable td:nth-child(2)"));
-            int i = 0;
-
-            foreach (IWebElement firstElement in firstElements)
+            if(contactCache == null)
             {
-                
-                contacts.Add(new ContactData(firstElement.Text, lastElements[i].Text));
-                i++;
+                contactCache = new List<ContactData>();
+                manager.Navigator.GoToMainPage();
+
+                ICollection<IWebElement> trFromTable = driver.FindElements(By.Name("entry")); //сбор всех строк из таблицы
+
+                foreach (IWebElement element in trFromTable)
+                {
+                    List<IWebElement> cellsElements = element.FindElements((By.TagName("td"))).ToList(); //сбор всех ячеек из строки в массив
+
+                    contactCache.Add(new ContactData(cellsElements[2].Text, cellsElements[1].Text)
+                    {
+                        Id = element.FindElement(By.TagName("input")).GetAttribute("value")
+                    });
+                }
             }
-            return contacts;
+            
+            return new List<ContactData>(contactCache);
         }
 
         public ContactHelper Modify(int i, ContactData newData)
@@ -104,6 +112,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.XPath("//input[21]")).Click();
+            contactCache = null;
             return this;
         }
 
@@ -116,6 +125,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactModofication()
         {
             driver.FindElement(By.Name("update")).Click();
+            contactCache = null;
             return this;
         }
 
@@ -141,6 +151,7 @@ namespace WebAddressbookTests
 
                 }
             }
+            contactCache = null;
             return this;
         }
 
@@ -179,6 +190,11 @@ namespace WebAddressbookTests
                 Create(contact);
             }
             return this;
+        }
+
+        public int GetContactCount()
+        {
+            return driver.FindElements(By.CssSelector("#maintable td:nth-child(3)")).Count;
         }
     }
 }
