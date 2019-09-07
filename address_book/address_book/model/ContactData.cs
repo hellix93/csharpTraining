@@ -58,6 +58,10 @@ namespace WebAddressbookTests
             return Lastname.CompareTo(other.Lastname);
         }
 
+        private string allPhones;
+
+        private string allEmails;
+
         public string Firstname { get; set; }
 
         public string Middlename { get; set; }
@@ -79,6 +83,64 @@ namespace WebAddressbookTests
         public string Work { get; set; }
 
         public string Fax { get; set; }
+
+        public string Home2 { get; set; }
+
+        public string AllEmails
+        {
+            get
+            {
+                if (allEmails != null)
+                {
+                    return allEmails;
+                }
+                else
+                {
+                    return (CleanUpMail(Email) + CleanUpMail(Email2) + CleanUpMail(Email3)).Trim();
+                }
+            }
+            set
+            {
+                allEmails = value;
+            }
+        }
+
+        public string AllPhones
+        {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                else
+                {
+                    return (CleanUp(Home) + CleanUp(Mobile) + CleanUp(Work) + CleanUp(Home2)).Trim();
+                }
+            }
+            set
+            {
+                allPhones = value;
+            }
+        }
+
+        private string CleanUp(string phone)
+        {
+            if (phone == null || phone == "")
+            {
+                return "";
+            }
+            return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+        }
+
+        private string CleanUpMail(string mail)
+        {
+            if (mail == null || mail == "")
+            {
+                return "";
+            }
+            return mail.Replace(" ", "").Replace("(", "").Replace(")", "") + "\r\n";
+        }
 
         public string Email { get; set; }
 

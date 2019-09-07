@@ -50,8 +50,14 @@ namespace WebAddressbookTests
             //видимо не успевает подгрузиться в кеш вся веб-страница из-за чего тест не находит нужные элементы по второй половине условия
             Thread.Sleep(200);
             return IsLoggedIn()
-                && (driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text 
-                    == "(" + account.Username + ")");
+                && GetLoggetUserName() == account.Username;
+                
+        }
+
+        private string GetLoggetUserName()
+        {
+            string text = driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text;
+            return text.Substring(1, text.Length - 2);
         }
     }
 }
