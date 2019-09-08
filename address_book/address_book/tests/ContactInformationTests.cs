@@ -25,7 +25,7 @@ namespace WebAddressbookTests
         [Test]
         public void TestContactInformation2()
         {
-            int i = 3;
+            int i = 0;
             String fromContactDetailsString = app.Contacts.GetContactInformationFromContactPage(i);
             ContactData fromForm = app.Contacts.GetContactInformationEditForm(i);
             String fromFormString = MakeStringFromEditContact(fromForm);

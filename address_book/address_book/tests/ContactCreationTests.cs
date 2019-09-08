@@ -10,9 +10,27 @@ namespace WebAddressbookTests
     [TestFixture]
     public class ContactCreationTests : AuthTestBase
     {
-        [Test]
-        public void ContactCreationTest()
+        public static IEnumerable<ContactData> RandomContactDataProvider()
         {
+            List<ContactData> contacts = new List<ContactData>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                contacts.Add(new ContactData(GenerateRandomString(30), GenerateRandomString(30))
+                {
+                    Address = GenerateRandomString(100),
+                    Home = GenerateRandomString(10),
+                    Email = GenerateRandomString(100)
+                });
+            }
+
+            return contacts;
+        }
+
+        [Test, TestCaseSource("RandomContactDataProvider")]
+        public void ContactCreationTest(ContactData contact)
+        {
+            /*
             ContactData contact = new ContactData("firstname", "lastname");
             //заполняем значениями
             //contact.Firstname = "firstname";
@@ -39,7 +57,7 @@ namespace WebAddressbookTests
             contact.Address2 = "add2";
             contact.Phone2 = "666";
             contact.Notes = "gotovo";
-
+            */
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
             app.Contacts.Create(contact);
