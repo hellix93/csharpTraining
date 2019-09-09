@@ -34,17 +34,17 @@ namespace WebAddressbookTests
 
         private string MakeStringFromEditContact(ContactData fromForm)
         {
-            string name = null;
-            string middleName = null;
-            string lastName = null;
-            string nickName = null;
-            string title = null;
-            string company = null;
-            string address = null;
-            string allPhones = null;
-            string fax = null;
-            string allEmails = null;
-            string homePage = "Homepage:";
+            string name = "";
+            string middleName = "";
+            string lastName = "";
+            string nickName = "";
+            string title = "";
+            string company = "";
+            string address = "";
+            string allPhones = "";
+            string fax = "";
+            string allEmails = "";
+            string homePage = "";
 
             if (fromForm.Firstname != "")
             {
@@ -79,7 +79,7 @@ namespace WebAddressbookTests
             if (fromForm.Address != "")
             {
 
-                address = fromForm.Address + "\r\n\r\n";
+                address = fromForm.Address + "\r\n";
             }
 
             if (fromForm.AllPhones != "")
@@ -89,7 +89,7 @@ namespace WebAddressbookTests
 
             if (fromForm.Fax != "")
             {
-                fax = fromForm.Fax + "\r\n\r\n";
+                fax = fromForm.Fax + "\r\n";
             }
 
             if (fromForm.AllEmails != "")
@@ -99,16 +99,16 @@ namespace WebAddressbookTests
 
             if (fromForm.Homepage != "")
             {
-                homePage += "\r\n" + fromForm.Homepage + "\r\n";
+                homePage = "Homepage:\r\n" + fromForm.Homepage + "\r\n";
             }
 
-            if (name + middleName + lastName + nickName + title + company + address + allPhones + fax + allEmails + homePage == "")
+            if (name+ middleName + lastName + nickName + title + company + address + allPhones + fax + allEmails + homePage == "")
             {
                 return "\r\n";
             }
             else
             {
-                return name + middleName + lastName + nickName + title + company + address + allPhones + fax + allEmails + homePage;
+                return name + middleName + lastName + nickName + title + company + address + "\r\n" + allPhones + fax + "\r\n" + allEmails + homePage;
             }
         }
     }
