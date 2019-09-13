@@ -8,6 +8,9 @@ namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
+        public ContactData()
+        {
+        }
 
         public ContactData(string firstname, string lastname)
         {
@@ -86,6 +89,12 @@ namespace WebAddressbookTests
 
         public string Home2 { get; set; }
 
+        public string Email { get; set; }
+
+        public string Email2 { get; set; }
+
+        public string Email3 { get; set; }
+
         public string AllEmails
         {
             get
@@ -142,11 +151,6 @@ namespace WebAddressbookTests
             return mail.Replace(" ", "").Replace("(", "").Replace(")", "") + "\r\n";
         }
 
-        public string Email { get; set; }
-
-        public string Email2 { get; set; }
-
-        public string Email3 { get; set; }
 
         public string Homepage { get; set; }
 
