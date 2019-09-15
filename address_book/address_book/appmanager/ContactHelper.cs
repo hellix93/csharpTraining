@@ -64,10 +64,30 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper Modify(ContactData oldData, ContactData newData)
+        {
+            manager.Navigator.GoToMainPage();
+            InitContactModification(oldData.Id);
+            FillContactForm(newData);
+            SubmitContactModofication();
+
+            manager.Navigator.GoToMainPage();
+            return this;
+        }
+
         public ContactHelper Remove(int i)
         {
             manager.Navigator.GoToMainPage();
             SelectContact(i);
+            RemoveContact();
+            manager.Navigator.GoToMainPage();
+            return this;
+        }
+
+        public ContactHelper Remove(ContactData toBeRemoved)
+        {
+            manager.Navigator.GoToMainPage();
+            SelectContact(toBeRemoved.Id);
             RemoveContact();
             manager.Navigator.GoToMainPage();
             return this;
@@ -90,12 +110,15 @@ namespace WebAddressbookTests
             Type(By.Name("email2"), contact.Email2);
             Type(By.Name("email3"), contact.Email3);
             Type(By.Name("homepage"), contact.Homepage);
-            new SelectElement(driver.FindElement(By.Name("bday"))).SelectByText(contact.Bday);
-            new SelectElement(driver.FindElement(By.Name("bmonth"))).SelectByText(contact.Bmonth);
-            Type(By.Name("byear"), contact.Byear);
-            new SelectElement(driver.FindElement(By.Name("aday"))).SelectByText(contact.Aday);
-            new SelectElement(driver.FindElement(By.Name("amonth"))).SelectByText(contact.Amonth);
-            Type(By.Name("ayear"), contact.Ayear);
+
+            if (contact.Bday != null) new SelectElement(driver.FindElement(By.Name("bday"))).SelectByText(contact.Bday);
+            if (contact.Bmonth != null) new SelectElement(driver.FindElement(By.Name("bmonth"))).SelectByText(contact.Bmonth);
+            if (contact.Byear != null) Type(By.Name("byear"), contact.Byear);
+
+            if (contact.Aday != null) new SelectElement(driver.FindElement(By.Name("aday"))).SelectByText(contact.Aday);
+            if (contact.Amonth != null) new SelectElement(driver.FindElement(By.Name("amonth"))).SelectByText(contact.Amonth);
+            if (contact.Ayear != null) Type(By.Name("ayear"), contact.Ayear);
+
             Type(By.Name("address2"), contact.Address2);
             Type(By.Name("phone2"), contact.Phone2);
             Type(By.Name("notes"), contact.Notes);
@@ -126,6 +149,12 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper InitContactModification(String index)
+        {
+            driver.FindElement(By.XPath("//a[@href='edit.php?id=" + index + "']")).Click();
+            return this;
+        }
+
         public ContactHelper SubmitContactModofication()
         {
             driver.FindElement(By.Name("update")).Click();
@@ -136,6 +165,12 @@ namespace WebAddressbookTests
         public ContactHelper SelectContact(int index)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
+
+        public ContactHelper SelectContact(String id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @id='" + id + "'])")).Click();
             return this;
         }
 
@@ -296,6 +331,38 @@ namespace WebAddressbookTests
                 .FindElement(By.TagName("a")).Click();
             contactCache = null;
             return this;
+        }
+
+        public void AddContactToGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigator.GoToMainPage();
+            ClearGroupFilter();
+            SelectContactToAdd(contact.Id);
+            SelectGroupToAdd(group.Name);
+            CommitAddingContactToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+
+        }
+
+        public void CommitAddingContactToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        public void SelectGroupToAdd(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
+        }
+
+        public void SelectContactToAdd(string contactId)
+        {
+            driver.FindElement(By.Id(contactId)).Click();
+        }
+
+        public void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
         }
     }
 }
