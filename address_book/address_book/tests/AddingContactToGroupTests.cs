@@ -12,18 +12,44 @@ namespace WebAddressbookTests
         [Test]
         public void TestAddingContactToGroup()
         {
-            GroupData group = GroupData.GetAll()[0];
-            List<ContactData> oldList = group.GetContacts();
-            ContactData contact = ContactData.GetAll().Except(oldList).First();
+            app.Contacts.CreateContactIfNotExist(0);
+            app.Groups.CreateGroupIfNotExist(0);
 
-            app.Contacts.AddContactToGroup(contact, group);
+            List<GroupData> groups = GroupData.GetAll();
+            for (int i = 0; i < groups.Count; i++)
+            {
+                GroupData group = groups[i];
+                List<ContactData> oldList = group.GetContacts();
+                ContactData contact = null;
+                try
+                {
+                    contact = ContactData.GetAll().Except(oldList).First();
+                }
+                catch (Exception)
+                {
+                    
+                }
 
-            List<ContactData> newList = group.GetContacts();
-            oldList.Add(contact);
-            newList.Sort();
-            oldList.Sort();
+                if (i + 1 == groups.Count && contact == null) // если чекаем последнюю группу и в ней также как и до этого все контакты
+                {
+                    ContactData contactToRemove = ContactData.GetAll().First();
+                    app.Contacts.RemoveContactFromGroup(contactToRemove, group);
+                    contact = contactToRemove;
+                    oldList = group.GetContacts(); //пересчитываем после удаления контакта из группы
+                }
+                if (contact != null)
+                {
+                    app.Contacts.AddContactToGroup(contact, group);
 
-            Assert.AreEqual(oldList, newList);
+                    List<ContactData> newList = group.GetContacts();
+                    oldList.Add(contact);
+                    newList.Sort();
+                    oldList.Sort();
+
+                    Assert.AreEqual(oldList, newList);
+                    i = groups.Count;
+                }
+            }
         }
     }
 }

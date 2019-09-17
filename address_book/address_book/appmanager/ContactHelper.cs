@@ -342,7 +342,6 @@ namespace WebAddressbookTests
             CommitAddingContactToGroup();
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                 .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
-
         }
 
         public void CommitAddingContactToGroup()
@@ -373,7 +372,6 @@ namespace WebAddressbookTests
             CommitRemovingContactFromGroup();
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                 .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
-
         }
 
         private void CommitRemovingContactFromGroup()

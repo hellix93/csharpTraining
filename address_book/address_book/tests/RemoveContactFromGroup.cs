@@ -12,35 +12,39 @@ namespace WebAddressbookTests
         [Test]
         public void TestRemoveContactFromGroup()
         {
+            app.Groups.CreateGroupIfNotExist(0);
+            app.Contacts.CreateContactIfNotExist(0);
             List<GroupData> groups = GroupData.GetAll();
 
-            if (groups.Count != 0)
+            for (int i = 0; i < groups.Count; i++)
             {
-                for (int i = 0; i < groups.Count; i++)
+                GroupData group = groups[i];
+                List<ContactData> oldList = group.GetContacts();
+
+                if (i + 1 == groups.Count && oldList.Count == 0) //если проверяется последняя группа и в ней нет контактов
                 {
-                    GroupData group = groups[i];
-                    List<ContactData> oldList = group.GetContacts();
-
-
-                    if (oldList.Count != 0)
-                    {
-                        ContactData contactToRemove = oldList[0];
-                        app.Contacts.RemoveContactFromGroup(contactToRemove, group);
-
-                        List<ContactData> newList = group.GetContacts();
-                        oldList.Remove(contactToRemove);
-                        newList.Sort();
-                        oldList.Sort();
-
-                        Assert.AreEqual(oldList, newList);
-
-                        i = groups.Count;
-                    }
+                    //берем первый контакт из всех существующих
+                    ContactData contact = ContactData.GetAll().First();
+                    //добавляем в последнюю группу
+                    app.Contacts.AddContactToGroup(contact, group);
+                    //обновляем список контактов у группы
+                    oldList = group.GetContacts();
                 }
-            }
-            else
-            {
-                Console.Out.Write("Группы отсутвуют. Создайте группу, добавите в нее контакт(-ы) и повторите тест.");
+
+                if (oldList.Count != 0)
+                {
+                    ContactData contactToRemove = oldList[0];
+                    app.Contacts.RemoveContactFromGroup(contactToRemove, group);
+
+                    List<ContactData> newList = group.GetContacts();
+                    oldList.Remove(contactToRemove);
+                    newList.Sort();
+                    oldList.Sort();
+
+                    Assert.AreEqual(oldList, newList);
+
+                    i = groups.Count;
+                }
             }
         }
     }
