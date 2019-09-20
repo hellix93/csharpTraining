@@ -20,6 +20,12 @@ namespace addressbook_tests_autoit
 
             List<GroupData> groupsBeforeDelete = app.Groups.GetGroupList();
 
+            if (groupsBeforeDelete.Count() < 2) //проверка что групп достаточно для удаления
+            {
+                app.Groups.Add(newGroupForDelete); //создаем еще группу для удаления
+                groupsBeforeDelete = app.Groups.GetGroupList(); //пересчитываем список
+            }
+
             app.Groups.Delete();
 
             List<GroupData> groupsAfterDelete = app.Groups.GetGroupList();
