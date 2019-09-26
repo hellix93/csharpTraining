@@ -40,5 +40,10 @@ namespace mantis_tests
                 return false;
             }
         }
+
+        public void SubmitButtonForm()
+        {
+            driver.FindElement(By.CssSelector("input.button")).Click();
+        }
     }
 }

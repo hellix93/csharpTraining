@@ -24,9 +24,9 @@ namespace mantis_tests
         {
             AccountData account = new AccountData()
             {
-                Name = "testuser",
-                Password = "password",
-                Email = "testuser@localhost.localdomain"
+                Name = "testuser1",
+                Password = "password1",
+                Email = "testuser1@localhost.localdomain"
             };
 
             app.James.Delete(account);
@@ -36,7 +36,7 @@ namespace mantis_tests
         }
 
         [TearDown]
-        public void restoreConfig()
+        public void RestoreConfig()
         {
             app.Ftp.RestoreBackupFile("/config_inc.php");
         }

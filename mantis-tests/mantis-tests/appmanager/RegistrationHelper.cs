@@ -18,15 +18,10 @@ namespace mantis_tests
             OpenRegistrationForm();
             FillRegistrationForm(account);
 
-            SubmitRegistration();
-            String url = GetConfirmationURL(account); //Читаем почту
+            SubmitButtonForm();
+            String url = GetConfirmationURL(account);
             FillPasswordForm(url, account);
             SubmitPasswordForm();
-        }
-
-        private void SubmitRegistration()
-        {
-            driver.FindElement(By.CssSelector("input.button")).Click();
         }
 
         private void OpenRegistrationForm()
@@ -63,6 +58,17 @@ namespace mantis_tests
             String message = manager.Mail.GetLastMail(account);
             Match match = Regex.Match(message, @"http://\S*");
             return match.Value;
+        }
+
+        internal void InitLogOut()
+        {
+            driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td[1]/a[9]")).Click();
+        }
+
+        public void FillAuthForm(AccountData admin)
+        {
+            driver.FindElement(By.Name("username")).SendKeys(admin.Name);
+            driver.FindElement(By.Name("password")).SendKeys(admin.Password);
         }
     }
 }
