@@ -47,9 +47,21 @@ namespace mantis_tests
         [Test]
         public void TestProjectRemoving()
         {
-            int i = 1;
+            int i = 3;
             List<ProjectData> oldprojects = new List<ProjectData>();
             oldprojects = app.Project.GetProjectList();
+
+            while (oldprojects.Count <= i)
+            {
+                ProjectData project = new ProjectData
+                {
+                    Name = "projectForDelete " + oldprojects.Count.ToString(),
+                    Description = "forRemovingTest"
+                };
+
+                app.Project.AddProject(project);
+                oldprojects = app.Project.GetProjectList();
+            }
 
             ProjectData removedProject = oldprojects[i];
 
