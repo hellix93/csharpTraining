@@ -26,6 +26,7 @@ namespace mantis_tests
 
                     string body = message.Body;
                     pop3.DeleteMessage(1);
+                    pop3.LogOut();
                     return message.Body;
                 }
                 else
